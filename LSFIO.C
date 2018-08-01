@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "lsint.h" 
 
-/* [�����] �뢮� �᫠ v � 䠩� fout.
+/* [ВЫВОД] Вывод числа v в файл fout.
 */
 void lsintout( LSINTEGER *v, FILE *fout ){
       int cr;
