@@ -11,7 +11,7 @@
 
 #define LINT12_NDT      (LINT1_NDT*LDIGIT_SIZE)
 
-/* ОПЕРАЦИИ НАД 12-БАЙТОВЫМИ ЧИСЛАМИ (основание LINT_BETA**12) */
+/* ╨Ю╨Я╨Х╨а╨Р╨ж╨Ш╨Ш ╨Э╨Р╨Ф 12-╨С╨Р╨Щ╨в╨Ю╨Т╨л╨Ь╨Ш ╨з╨Ш╨б╨Ы╨Р╨Ь╨Ш (╨╛╤Б╨╜╨╛╨▓╨░╨╜╨╕╨╡ LINT_BETA**12) */
 /* ----------------------------------------------------------- */
 
 void            lint12div( LDIGITC xl, LDIGITC xh, LDIGIT y, LDIGIT q,
@@ -24,9 +24,9 @@ const char *    lint12scan( LDIGIT x, const char *s, const char *t );
 void            lint12out( FILE *out, LDIGITC x, int p );
 void		lint12long( LDIGIT x, unsigned long v );
 
-/* Вырабатывает представление числа x в виде последовательности
-   десятичных цифр. d[ i ] содержит i-ю десятичную цифру числа
-   x (начиная с младших цифр).
+/* ╨Т╤Л╤А╨░╨▒╨░╤В╤Л╨▓╨░╨╡╤В ╨┐╤А╨╡╨┤╤Б╤В╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╤З╨╕╤Б╨╗╨░ x ╨▓ ╨▓╨╕╨┤╨╡ ╨┐╨╛╤Б╨╗╨╡╨┤╨╛╨▓╨░╤В╨╡╨╗╤М╨╜╨╛╤Б╤В╨╕
+   ╨┤╨╡╤Б╤П╤В╨╕╤З╨╜╤Л╤Е ╤Ж╨╕╤Д╤А. d[ i ] ╤Б╨╛╨┤╨╡╤А╨╢╨╕╤В i-╤О ╨┤╨╡╤Б╤П╤В╨╕╤З╨╜╤Г╤О ╤Ж╨╕╤Д╤А╤Г ╤З╨╕╤Б╨╗╨░
+   x (╨╜╨░╤З╨╕╨╜╨░╤П ╤Б ╨╝╨╗╨░╨┤╤И╨╕╤Е ╤Ж╨╕╤Д╤А).
 */
 void lint12dt( LDIGITC x, byte d[ LINT12_NDT ] );
 
@@ -34,7 +34,7 @@ void lint12dt( LDIGITC x, byte d[ LINT12_NDT ] );
 #define lint12zero( x )         lint12copy( x, Lint12Zero )
 #define lint12beta( x )         lint12copy( x, Lint12Beta1 )
 
-/* Некоторые 12-байтовые константы: */
+/* ╨Э╨╡╨║╨╛╤В╨╛╤А╤Л╨╡ 12-╨▒╨░╨╣╤В╨╛╨▓╤Л╨╡ ╨║╨╛╨╜╤Б╤В╨░╨╜╤В╤Л: */
 extern const byte Lint12Zero [ LDIGIT_SIZE ];   /* 0 */
 extern const byte Lint12One  [ LDIGIT_SIZE ];   /* 1 */
 extern const byte Lint12Beta1[ LDIGIT_SIZE ];   /* base - 1 */
