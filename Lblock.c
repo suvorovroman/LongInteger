@@ -1,6 +1,6 @@
 /* $Id: Lblock.c,v 1.2 2009-07-01 16:13:05 roma Exp $ */
 
-/* lblock.c (выделение блоков под ячеистую память) */
+/* lblock.c (╨▓╤Л╨┤╨╡╨╗╨╡╨╜╨╕╨╡ ╨▒╨╗╨╛╨║╨╛╨▓ ╨┐╨╛╨┤ ╤П╤З╨╡╨╕╤Б╤В╤Г╤О ╨┐╨░╨╝╤П╤В╤М) */
 
 #include <stdlib.h> 
 #include <malloc.h>
@@ -14,9 +14,9 @@
 
 void lstop( const char *, const char * );
 
-static unsigned long int LMemLeak = 0L; /* счетчик выделенной памяти */
+static unsigned long int LMemLeak = 0L; /* ╤Б╤З╨╡╤В╤З╨╕╨║ ╨▓╤Л╨┤╨╡╨╗╨╡╨╜╨╜╨╛╨╣ ╨┐╨░╨╝╤П╤В╨╕ */
 
-/* цепочка выделенных блоков */
+/* ╤Ж╨╡╨┐╨╛╤З╨║╨░ ╨▓╤Л╨┤╨╡╨╗╨╡╨╜╨╜╤Л╤Е ╨▒╨╗╨╛╨║╨╛╨▓ */
 struct LBlock{
         struct LCELL    pool[ LBLOCK_SIZE ];
         struct LBlock    *next;
@@ -36,16 +36,16 @@ static struct LBlock  *LBlockChain = NULL;
 	#define DEALLOCATE( PTR )   free( PTR )
 #endif
 
-/* Размещает блок памяти.
-   Для размещения используется "дальняя" куча.
-   В случае нехватки памяти происходит аварийное завершение. */
+/* ╨а╨░╨╖╨╝╨╡╤Й╨░╨╡╤В ╨▒╨╗╨╛╨║ ╨┐╨░╨╝╤П╤В╨╕.
+   ╨Ф╨╗╤П ╤А╨░╨╖╨╝╨╡╤Й╨╡╨╜╨╕╤П ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╤В╤Б╤П "╨┤╨░╨╗╤М╨╜╤П╤П" ╨║╤Г╤З╨░.
+   ╨Т ╤Б╨╗╤Г╤З╨░╨╡ ╨╜╨╡╤Е╨▓╨░╤В╨║╨╕ ╨┐╨░╨╝╤П╤В╨╕ ╨┐╤А╨╛╨╕╤Б╤Е╨╛╨┤╨╕╤В ╨░╨▓╨░╤А╨╕╨╣╨╜╨╛╨╡ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨╕╨╡. */
 LADDRESS get_lblock( void ){
         LADDRESS ret;
         struct LBlock  *lb;
         
         lb = (struct LBlock  *)ALLOCATE( sizeof( struct LBlock ) );
         if( lb == NULL )
-        	lstop( "get_lblock", "Ошибка при размещении блока\n" );
+        	lstop( "get_lblock", "╨Ю╤И╨╕╨▒╨║╨░ ╨┐╤А╨╕ ╤А╨░╨╖╨╝╨╡╤Й╨╡╨╜╨╕╨╕ ╨▒╨╗╨╛╨║╨░\n" );
         lb->next = LBlockChain;
         LBlockChain = lb;
         ret = (LADDRESS)lb->pool;
@@ -53,13 +53,13 @@ LADDRESS get_lblock( void ){
         return ret;
 }
 
-/* LMemLeak - немодифицируемая извне переменная. */
+/* LMemLeak - ╨╜╨╡╨╝╨╛╨┤╨╕╤Д╨╕╤Ж╨╕╤А╤Г╨╡╨╝╨░╤П ╨╕╨╖╨▓╨╜╨╡ ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П. */
 unsigned long int lleak( void ){
         return LMemLeak;
 }
 
-/* Освобождение памяти, занятой блоками ячеистой памяти.
-   (блоки не должны содежать используемых ячеек).
+/* ╨Ю╤Б╨▓╨╛╨▒╨╛╨╢╨┤╨╡╨╜╨╕╨╡ ╨┐╨░╨╝╤П╤В╨╕, ╨╖╨░╨╜╤П╤В╨╛╨╣ ╨▒╨╗╨╛╨║╨░╨╝╨╕ ╤П╤З╨╡╨╕╤Б╤В╨╛╨╣ ╨┐╨░╨╝╤П╤В╨╕.
+   (╨▒╨╗╨╛╨║╨╕ ╨╜╨╡ ╨┤╨╛╨╗╨╢╨╜╤Л ╤Б╨╛╨┤╨╡╨╢╨░╤В╤М ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝╤Л╤Е ╤П╤З╨╡╨╡╨║).
 */
 void free_lbchain( void ){
       while( LBlockChain != NULL ){
