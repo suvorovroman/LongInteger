@@ -1,9 +1,8 @@
 /* $Id: lratpp.h,v 1.2 2006-04-22 21:49:29 roma Exp $ */
 
-#include <utilib_extern.h>
 #include <lintpp.h>
 
-class _UTILIB_EXTERN_ lrational{
+class LINTAPI lrational{
 	linteger n, d;
 
 	void correct(){
