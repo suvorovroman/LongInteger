@@ -1,13 +1,12 @@
 /* $Id: lintpp.h,v 1.4 2007-03-11 11:50:23 roma Exp $ */
 
 #include <iostream>
-#include <utilib_extern.h>
 
 extern "C"{
 	#include "lsint.h" 
 }
 
-class _UTILIB_EXTERN_ linteger:private tagLSINTEGER{ 
+class LINTAPI linteger:private tagLSINTEGER{ 
 public:
 	linteger(){
 		lsintzero(this);
@@ -172,7 +171,7 @@ public:
 		return t;
 	}
 
-	friend _UTILIB_EXTERN_ std::ostream & operator <<(std::ostream &out, const linteger &v);
+	friend LINTAPI std::ostream & operator <<(std::ostream &out, const linteger &v);
 
 	friend linteger lcm(linteger &v, linteger &w){
 		linteger	t1 = v, t2 = w;
