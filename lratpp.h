@@ -1,6 +1,6 @@
 /* $Id: lratpp.h,v 1.2 2006-04-22 21:49:29 roma Exp $ */
 
-#include <lintpp.h>
+#include "lintpp.h"
 
 class LINTAPI lrational{
 	linteger n, d;

@@ -45,11 +45,14 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -77,6 +80,7 @@
     <ClInclude Include="..\..\Lint.h" />
     <ClInclude Include="..\..\LINT1.H" />
     <ClInclude Include="..\..\LINT12.H" />
+    <ClInclude Include="..\..\lintapi.h" />
     <ClInclude Include="..\..\lintpp.h" />
     <ClInclude Include="..\..\lratpp.h" />
     <ClInclude Include="..\..\Lsint.h" />
@@ -96,6 +100,12 @@
     <ClCompile Include="..\..\LSLCM.C" />
     <ClCompile Include="..\..\LSRND.C" />
     <ClCompile Include="..\..\Lstor.c" />
+    <ClCompile Include="..\..\ltest.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeaderOutputFile>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

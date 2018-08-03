@@ -165,7 +165,7 @@ public:
 		return t;
 	}
 
-	friend linteger rand(int length){
+	static linteger rand(int length){
 		linteger t;
 		lsintrand(&t, length);
 		return t;
