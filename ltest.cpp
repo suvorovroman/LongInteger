@@ -19,10 +19,10 @@ static void unit_01(int _l)
 {
 	std::cout << "Arithmetic test. Length " << _l << endl;
 	linteger a = linteger::rand(_l);	
-	linteger b;
+	linteger b, zero;
 	do
 		b = linteger::rand(_l);		
-	while(b == 0);
+	while(b == zero);
 	linteger q, r;
 	div(a, b, q, r);
 	if(q*b + r != a)
@@ -36,24 +36,27 @@ static void unit_01(int _l)
 	}
 }
 
-#define	MAX_LENGTH	1597
+#define	MAX_LENGTH	17711
+#define MAX_ITER	10
 
 int main(int _argc, const char* _argv[])
 {
 	int f1 = 1, f2 = 1;
-	srand(time(0));
+	srand((int)time(0L));
 	
 	/* Арифметический тест. Размер чисел растет как последовательность Фиббоначи. */ 
 	do
 	{
-		unit_01(f2);
+		for(int i = 0; i < MAX_ITER; i++)
+			unit_01(f2);
 		int f = f1 + f2;
 		f1 = f2;
 		f2 = f;
 	}
-	while(f2 < MAX_LENGTH);
+	while(f2 <= MAX_LENGTH);
 	
 	linteger::finalize();
+	cout << "ok" << endl;
 	cin.get();
 	return 0;
 }
