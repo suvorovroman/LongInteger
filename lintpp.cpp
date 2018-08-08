@@ -1,4 +1,4 @@
-/* $Id: lintpp.cpp,v 1.2 2006-04-22 21:49:29 roma Exp $ */
+/* Copyright (C) 1996-2018 Suvorov Roman I. */
 
 #include "lintpp.h" 
 
@@ -39,4 +39,31 @@ int linteger::length() const{
 	}
 	lsintdtend(&l);
 	return count;
+}
+
+linteger::rng::rng(int length):Length(length)
+{
+	Buffer = new char[Length + 1];
+	Buffer[Length] = '\0';
+}
+
+linteger::rng::~rng()
+{
+	delete[] Buffer;
+}
+
+linteger linteger::rng::get()
+{
+	/* Определение длины нового случайного числа. Длина всегда должны быть больше нуля, чтобы не
+	   увеличивать количество нулей за счет двух возможных способов получения: строки нулевой длины и
+	   строки, содержащей нули. Оставляем только выриант со строкой соделжащей нули.*/
+	int l;
+	do
+		l = rand()%Length;
+	while(l == 0);
+	/* Разряды заполняются с конца. Младший байт не используется, чтобы повысить равномерность
+	   распределения разряда. */
+	while(l)
+		Buffer[l--] = (rand()>>8)%10;
+	return linteger(Buffer);
 }
