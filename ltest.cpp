@@ -6,6 +6,8 @@
 
 using namespace std;
 
+#define MAX_LENGTH	6765	//!< Максимальная длина тестируемых чисел.
+
 /** 	\brief Тест основных арифметических операций.
 
 	Проверяет условие a = q*b + r для двух произвольных целых чисел. Здесь
@@ -15,13 +17,12 @@ using namespace std;
 	
 	\param[in]	_l	Максимальная длина исходных данных.
 */
-static void unit_01(int _l)
+static void unit_01(linteger::rng& g)
 {
-	std::cout << "Arithmetic test. Length " << _l << endl;
-	linteger a = linteger::rand(_l);	
+	linteger a = g.get();	
 	linteger b, zero;
 	do
-		b = linteger::rand(_l);		
+		b = g.get();		
 	while(b == zero);
 	linteger q, r;
 	div(a, b, q, r);
@@ -36,25 +37,21 @@ static void unit_01(int _l)
 	}
 }
 
-#define	MAX_LENGTH	17711
-#define MAX_ITER	10
-
 int main(int _argc, const char* _argv[])
 {
-	int f1 = 1, f2 = 1;
-	srand((int)time(0L));
+	int seed = (int)time(0);
+	linteger::rng g(MAX_LENGTH);
+	cout << "Randomizing seed " << seed << endl;
+
+	srand(seed);
 	
-	/* Арифметический тест. Размер чисел растет как последовательность Фиббоначи. */ 
-	do
+	std::cout << "Arithmetic test. Length " << MAX_LENGTH << endl;
+	for(int i = 1; i <= 10000; i++)
 	{
-		for(int i = 0; i < MAX_ITER; i++)
-			unit_01(f2);
-		int f = f1 + f2;
-		f1 = f2;
-		f2 = f;
+		cout << i << '\t';
+		unit_01(g);
 	}
-	while(f2 <= MAX_LENGTH);
-	
+
 	linteger::finalize();
 	cout << "ok" << endl;
 	cin.get();

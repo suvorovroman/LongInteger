@@ -44,7 +44,6 @@ int linteger::length() const{
 linteger::rng::rng(int length):Length(length)
 {
 	Buffer = new char[Length + 1];
-	Buffer[Length] = '\0';
 }
 
 linteger::rng::~rng()
@@ -59,11 +58,12 @@ linteger linteger::rng::get()
 	   строки, содержащей нули. Оставляем только выриант со строкой соделжащей нули.*/
 	int l;
 	do
-		l = rand()%Length;
+		l = ::rand()%Length;
 	while(l == 0);
 	/* Разряды заполняются с конца. Младший байт не используется, чтобы повысить равномерность
 	   распределения разряда. */
-	while(l)
-		Buffer[l--] = (rand()>>8)%10;
+	Buffer[l + 1] = '\0';
+	while(l >= 0)
+		Buffer[l--] = ::rand()%10 + '0';
 	return linteger(Buffer);
 }
