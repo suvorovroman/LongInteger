@@ -43,7 +43,7 @@ int linteger::length() const{
 
 linteger::rng::rng(int length):Length(length)
 {
-	Buffer = new char[Length + 1];
+	Buffer = new char[Length + 2];
 }
 
 linteger::rng::~rng()
@@ -51,7 +51,7 @@ linteger::rng::~rng()
 	delete[] Buffer;
 }
 
-linteger linteger::rng::get()
+linteger linteger::rng::get(bool signed)
 {
 	/* Определение длины нового случайного числа. Длина всегда должны быть больше нуля, чтобы не
 	   увеличивать количество нулей за счет двух возможных способов получения: строки нулевой длины и
@@ -62,8 +62,9 @@ linteger linteger::rng::get()
 	while(l == 0);
 	/* Разряды заполняются с конца. Младший байт не используется, чтобы повысить равномерность
 	   распределения разряда. */
-	Buffer[l + 1] = '\0';
+	Buffer[l + 2] = '\0';
 	while(l >= 0)
-		Buffer[l--] = ::rand()%10 + '0';
+		Buffer[1 + l--] = ::rand()%10 + '0';
+	Buffer[0] = (signed && ::rand()&0x1) ? '-':'+';
 	return linteger(Buffer);
 }
