@@ -19,10 +19,10 @@ using namespace std;
 */
 static void unit_01(linteger::rng& g)
 {
-	linteger a = g.get();	
+	linteger a = g(true);	
 	linteger b, zero;
 	do
-		b = g.get();		
+		b = g(true);		
 	while(b == zero);
 	linteger q, r;
 	div(a, b, q, r);
