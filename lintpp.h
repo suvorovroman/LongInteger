@@ -293,15 +293,15 @@ public:
 			
 			\return Cлучайное число.
 		*/
-		linteger get(bool signed = false);
+		linteger get(bool sign = false);
 		
 		/** \brief Выдать очередное случайное число.
 			\see get
 			\return Случайное число.
 		*/
-		linteger operator(bool signed = true)()
+		linteger operator()(bool sign = false)
 		{
-			return get();
+			return get(sign);
 		}
 		
 	};

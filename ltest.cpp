@@ -7,8 +7,9 @@
 
 using namespace std;
 
-#define MAX_LENGTH	6765	//!< Максимальная длина тестируемых чисел.
+#define MAX_LENGTH		6765	//!< Максимальная длина тестируемых чисел.
 #define MAX_ATTEMPTS	10000	//!< Количество попыток теста.
+#define MAX_SEGMENTS	100
 
 /** 	\brief Тест основных арифметических операций.
 
@@ -44,56 +45,95 @@ static void unit_01(linteger::rng& g)
 	}
 }
 
-struct frequency_segment
-{
-	linteger b;	//!< Нижняя граница интерфала.
-	size_t n;	//!< Количество попаданий в интервал.
-};
-
-#define NOMBER_OF_FREQUENCY_SEGMENTS	1000
-
 static void unit_02(linteger::rng& g)
 {
-	struct frequency_segment s[NOMBER_OF_FREQUENCY_SEGMENTS];
-	
-	cout << "Statistical test. Length " << MAX_LENGTH << endl;
-	
-	s[0].b = -linteger(string(MAX_LENGTH, '9').c_str());
-	s[0].n = 0;
-	for(int i = 1; i < NOMBER_OF_FREQUENCY_SEGMENTS; i++)
+	cout << "Statistical test. Length " << MAX_LENGTH << ". Segments " << MAX_SEGMENTS << endl;
+	size_t n[MAX_SEGMENTS];
+
+	for(int i = 0; i < MAX_SEGMENTS; i++)
+		n[i] = 0;
+
+	linteger s = (linteger(string(MAX_LENGTH, '9').c_str()) + linteger(1))/linteger(MAX_SEGMENTS);
+
+	for(int j = 0; j < MAX_ATTEMPTS; j++)
 	{
-		s[i].b = s[i - 1].b + (abs(s[0].b)*2 + 1)/NOMBER_OF_FREQUENCY_SEGMENTS;
-		s[i].b = 0;
-	}
-	cout << NUMBER_OF_FREQUENCY_SEGMENTS << "frequency segments generated" << endl;
-	
-	for(int j = 1; j <= MAX_ATTEMPTS; i++)
-	{
-		linteger v = g(true);
-		for(int i = NUMBER_OF_FREQUENCY_SEGMENTS - 1; i >= 0; i--)
-			if(v >= s[i].b)
+		linteger v = g();
+		for(int i = MAX_SEGMENTS - 1; i >= 0; i--)
+			if(v >= s*linteger(i))
 			{
-				s[i].n++;
+				n[i]++;
 				break;
 			}
+		cout << j << '\t';
 	}
-	
-	cout << "Frequencies:" << endl;
-	for(int i = 0; i < NUMBER_OF_FREQUENCY_SEGMENTS; i++)
-		cout << i << ':' << s[i].n << '\t';
 
+	cout << endl;
+
+	size_t c = 0;
+	for(int i = 0; i < MAX_SEGMENTS; i++)
+	{
+		cout << i << ':' << n[i] << '\t';
+		c += n[i];
+	}
+	cout << endl;
+
+	if(c != MAX_ATTEMPTS)
+	{
+		cout << "Statistic calculation failure:" << MAX_ATTEMPTS << "!=" << c << endl;
+		exit(2018);
+	}
+}
+
+static void unit_03()
+{
+	cout << "RAND function test. Random number length determination test." << endl;
+	size_t n[MAX_SEGMENTS];
+
+	for(int i = 0; i < MAX_SEGMENTS; i++)
+		n[i] = 0;
+
+	int s = MAX_LENGTH/MAX_SEGMENTS;
+
+	for(int j = 0; j < MAX_ATTEMPTS; j++)
+	{
+		size_t v = rand()%(MAX_LENGTH + 1);
+		for(int i = MAX_SEGMENTS - 1; i >= 0; i--)
+			if(v >= (size_t)s*i)
+			{
+				n[i]++;
+				break;
+			}
+		cout << j << '\t';
+	}
+	cout << endl;
+
+	size_t c = 0;
+	for(int i = 0; i < MAX_SEGMENTS; i++)
+	{
+		cout << i << ':' << n[i] << '\t';
+		c += n[i];
+	}
+	cout << endl;
+
+	if(c != MAX_ATTEMPTS)
+	{
+		cout << "Statistic calculation failure:" << MAX_ATTEMPTS << "!=" << c << endl;
+		exit(2018);
+	}
 }
 
 int main(int _argc, const char* _argv[])
 {
 	int seed = (int)time(0);
+
 	linteger::rng g(MAX_LENGTH);
 	cout << "Randomizing seed " << seed << endl;
 
 	srand(seed);
 	
-	unit_01(g);
+//	unit_01(g);
 	unit_02(g);
+//	unit_03();
 
 	linteger::finalize();
 	cout << "ok" << endl;
