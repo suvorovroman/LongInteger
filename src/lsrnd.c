@@ -11,7 +11,7 @@ void lsintrand( LSINTEGER *v, int length ){
       if( length > 0 ){
             char *buffer;
 
-			length = rand()%(length + 1);
+	    length = rand()%(length + 1);
             buffer = (char *)malloc( length + 2 );
             if( buffer != NULL ){
                   int i;

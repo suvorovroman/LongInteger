@@ -1,33 +1,37 @@
-/* $Id: Lstor.h,v 1.1.1.1 2005-11-20 11:36:48 roma Exp $ */
+/**\file	lstor.h
+   \brief	Пул ячеек памяти
+   \author	Суворов Роман
+   \date	23.11.2024
 
-/* lstor.h */
+   $Id: Lstor.h,v 1.1.1.1 2005-11-20 11:36:48 roma Exp $
+ */
 
-/*                     УПРАВЛЕНИЕ ЯЧЕИСТОЙ ПАМЯТЬЮ                   */ 
-/*-------------------------------------------------------------------*/
+#include "lstor64.h"
 
-#include <stdio.h>
+/** Размер значения ячейки в байтах.
 
-typedef unsigned char byte; 
+    Размер адреса - 4 байта (1 слово). Размер блока - 4096 (1024 слова).
+    Размер пула для ячеек в блоке - 1023 (1 указатель на следующий блок).
+    Разложение размера пула блока на простые множители - 3*11*31, т.е. 31 ячейка
+    по 33 слова. Одно слово в ячейке - указатель на следующую ячейку поэтомы размер
+    значения ячейки (33 - 1) = 32 слова или 128 байт.
+*/
 
-typedef struct LCELL  *           LADDRESS;
-typedef const struct LCELL  *     LADDRESSC;
-typedef byte  *                   LDATA;
-typedef const byte  *             LDATAC;
+typedef struct lcell lcell;
+typedef unsigned char lcell_byte;
 
-#define LNULL           ((LADDRESS)NULL)
-#define LCELL_SIZE      16
-#define LCELL_DATA_SIZE (LCELL_SIZE - sizeof( LADDRESS ) )
+#define LNULL ((lcell*)NULL)
 
-#define LBLOCK_SIZE     256
-
-struct LCELL{
-        byte data[ LCELL_DATA_SIZE ];
-        LADDRESS link;
+/** Ячейка. */
+struct lcell
+{
+	lcell *link;				/**< Указатель на следующую ячейку в цепочке. */
+	lcell_byte data[ LSTOR_CELL_SIZE ];	/**< Данные ячейки. */
 };
 
 /* Создание новой ячейки.
    Возвращает адрес ячейки. */
-LADDRESS        new_cell( void );
+lcell* new_cell( void );
 
 /* Удаление ячейки.
    "а" - адрес удаляемой ячейки, полученный
@@ -36,24 +40,24 @@ LADDRESS        new_cell( void );
 
 /* Удаление цепочки.
    "b" и "e" - адреса первой и последней ячеек цепочки. */
-void            del_chain( LADDRESS b, LADDRESS e );
+void            del_chain( lcell* b, lcell* e );
 
 /* Обращение цепочки a.
    В x помещается указатель на полученную цепочку.      */
-void            invert_chain( LADDRESS * a );
+void            invert_chain( lcell** a );
 
 /* Создание копии цепочки y.
    В x помещается адрес первой ячейки копии, возвращается адрес
    последней ячейки копии.      */
-LADDRESS        copy_chain( LADDRESS *x, LADDRESSC y );
+lcell*        copy_chain( lcell** x, const lcell* y );
 
 /* Вычисление длины цепочки x.
    В e помещается адрес последней ячейки цепочки. */
-unsigned int	len_chain( LADDRESS x, LADDRESS *e );
+unsigned int	len_chain( lcell* x, lcell** e );
 
 /* Копирование блока данных размера LCELL_DATA_SIZE.
    y - источник, x - приемник. */
-void            copy_cell_data( LDATA x, LDATAC y );
+void            copy_cell_data( lcell_byte *x, const lcell_byte *y );
   
 /* Объем ОП, зарезервированный под хранение
    ячеек (в байтах).    */

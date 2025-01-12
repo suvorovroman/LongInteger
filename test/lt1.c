@@ -5,37 +5,34 @@
 
 /* 61500 65600 */
 
-#define N 300
-#define L 1000
+#define N 100		/* Количество итераций */
+#define L 100000	/* Максимальная длина числа */
 
 int main()
 {
   int i;
-  unsigned int s;
 
-  s = time(NULL);
+  srand(time(NULL));
 
   for(i = 1; i <= N; i++)
     {
       LINTEGER x, y, r, q, z;
-      LADDRESS xe, ye, re, qe, ze;
-      unsigned int n1, n2;
+      lcell *xe, *ye, *re, *qe, *ze;
+      int n1, n2;
 
-      
-      n1 = rand_r(&s)%L;
-      n2 = rand_r(&s)%L;
-      
-      printf("%5d. %d/%d mem:%u\n", i, n1, n2, lleak());
+      printf("%5d. mem:%u\n", i, lleak());
 
-      xe = lintrand(&x, rand_r(&s)%L, &s);
-      ye = lintrand(&y, rand_r(&s)%L, &s);
+      xe = lintrand(&x, -L);
+      ye = lintrand(&y, -L);
 
       re = lintcopy(&r, x);
+
       lintdiv(&r, &re, y, &q, &qe);
       lintmul(y, q, &z, &ze);
       lintadd(&z, &ze, r);
       if(lintcmp(x, z))
 	{
+	  printf("Error\n");
 	  printf("x:");
 	  lintout(stdout, x);
 	  printf("\ny:");

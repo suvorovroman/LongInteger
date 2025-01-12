@@ -154,8 +154,8 @@ void lsintdtstart( LSINTDTLIST *l, LSINTEGER *v ){
 /* [ПРЕДСТАВЛЕНИЕ] Получение очередной десятичной цифры из
    итератора l.
 */
-byte lsintdtget( LSINTDTLIST *l ){
-      byte ret;
+LINT_DIGIT lsintdtget( LSINTDTLIST *l ){
+      LINT_DIGIT ret;
 
       ret = l->d[ l->i ];
       (l->i)--;

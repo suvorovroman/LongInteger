@@ -1,3 +1,10 @@
+/** \file
+    \brief	Арифметика целых чисел.
+    \author	Suvorov Roman
+    \data	20.11.2005
+    \version	1.1
+*/
+
 /* $Id: Lsint.h,v 1.1.1.1 2005-11-20 11:36:48 roma Exp $ */
 
 #include "lintapi.h"
@@ -5,8 +12,8 @@
 
 struct tagLSINTEGER{ 
         char sign;      /* знак минус (используется младший бит) */
-        LADDRESS x;     /* указатель на число */
-        LADDRESS xe;    /* указатель на хвост числа */
+        lcell* x;     /* указатель на число */
+        lcell* xe;    /* указатель на хвост числа */
 };
 typedef struct tagLSINTEGER LSINTEGER;
 
@@ -75,8 +82,8 @@ LINTAPI void lsintdel( int n, ... );
 
 struct tagLSINTDTLIST{
       LSINTEGER *v;
-      LADDRESS  xc;
-      byte       d[ LINT12_NDT ];
+      lcell*  xc;
+      LINT_DIGIT       d[ LINT12_NDT ];
       int        i;
 };
 typedef struct tagLSINTDTLIST LSINTDTLIST;
@@ -93,7 +100,7 @@ LINTAPI void lsintdtstart( LSINTDTLIST *l, LSINTEGER *v );
 /* [ПРЕДСТАВЛЕНИЕ] Получение очередной десятичной цифры из
    итератора l.
 */
-LINTAPI byte lsintdtget( LSINTDTLIST *l );
+LINTAPI LINT_DIGIT lsintdtget( LSINTDTLIST *l );
 
 /* [ПРЕДСТАВЛЕНИЕ] Возвращает ненулевое значение если итератор l
    еще содержит цифры.

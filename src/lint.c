@@ -10,9 +10,9 @@
 
 /* Преобразует строку от s до t в число x.
    Возвращает адрес последней ячейки числа.     */
-static LADDRESS lintscan( LINTEGER * x,
+static lcell* lintscan( LINTEGER * x,
                           const char * s, const char * t ){
-        LADDRESS c;
+        lcell *c;
 
         *x = c = LNULL;
         while( s != t ){
@@ -37,7 +37,7 @@ static LADDRESS lintscan( LINTEGER * x,
    указатель на последнюю ячейку числа.
    Если строка не может быть преобразована в число, то x и возвращае-
    мое значение равны LNULL. */
-LADDRESS lint( LINTEGER * x, const char * s ){
+lcell* lint( LINTEGER * x, const char * s ){
         const char * t;
 
         while( isspace( *s ) || *s == '0' )
@@ -51,7 +51,7 @@ LADDRESS lint( LINTEGER * x, const char * s ){
 /* Вывод числа x в файл out.
    Число печатается без ведущих нулей. */
 void lintout( FILE * out, LINTEGER x ){
-        LADDRESS c;
+        lcell* c;
 
         invert_chain( &x );
         c = x;
@@ -71,7 +71,7 @@ void lintout( FILE * out, LINTEGER x ){
 /* Удаление числа x. */
 void lintdel( LINTEGER x ){
         while( x != LNULL ){
-                LADDRESS c;
+                lcell* c;
         
                 c = x;
                 x = x->link;
@@ -81,7 +81,7 @@ void lintdel( LINTEGER x ){
 
 /* Быстрое удаление числа x (когда известен e - указатель на последнюю
    ячейку числа ). */
-void lintdelex( LINTEGER x, LADDRESS e ){
+void lintdelex( LINTEGER x, lcell *e ){
         if( x != LNULL )
                 del_chain( x, e );
 }
@@ -92,8 +92,8 @@ void lintdelex( LINTEGER x, LADDRESS e ){
    меняется. 
    x и y могут указывать на одну и ту же цепочку.
 */
-void lintadd( LINTEGER *x, LADDRESS *xe, LINTEGERC y ){
-        LADDRESS xc, xt;
+void lintadd( LINTEGER *x, lcell **xe, LINTEGERC y ){
+        lcell *xc, *xt;
 
         LintCf = 0;
         
@@ -145,10 +145,10 @@ void lintadd( LINTEGER *x, LADDRESS *xe, LINTEGERC y ){
    y и z могут указывать на одну и ту же цепочку.
    В ходе вычислений старое значение x теряется.
 */
-void lintmul( LINTEGERC y, LINTEGERC z, LINTEGER *x, LADDRESS *xe ){
-        LADDRESS xc, xs, xt;
-        LADDRESSC yc;
-        byte t[ LDIGIT_SIZE ];
+void lintmul( LINTEGERC y, LINTEGERC z, LINTEGER *x, lcell **xe ){
+        lcell *xc, *xs, *xt;
+        const lcell* yc;
+        LINT_DIGIT t[ LDIGIT_SIZE ];
 
         *x = *xe = LNULL;
         LintCf = 0;
@@ -173,7 +173,7 @@ void lintmul( LINTEGERC y, LINTEGERC z, LINTEGER *x, LADDRESS *xe ){
                 yc = y;
                 xc = xs;
                 do{
-                        byte w[ 2 ][ LDIGIT_SIZE ];
+                        LINT_DIGIT w[ 2 ][ LDIGIT_SIZE ];
         
                         lint12mul( yc->data, z->data, (LDIGIT)w );
                         /* LintCf == 0 */
@@ -214,8 +214,8 @@ void lintmul( LINTEGERC y, LINTEGERC z, LINTEGER *x, LADDRESS *xe ){
    Флаг переноса должен быть сброшен, по возвращении он
    остается сброшен. */
 static void mulbyd( LINTEGER x, LDIGITC d ){
-        LADDRESS xt, xp;
-        byte w[ 2 ][ LDIGIT_SIZE ];
+        lcell *xt, *xp;
+        LINT_DIGIT w[ 2 ][ LDIGIT_SIZE ];
 
         lint12mul( x->data, d, (LDIGIT)w );
         lint12copy( x->data, w[ 0 ] );
@@ -255,10 +255,10 @@ static void mulbyd( LINTEGER x, LDIGITC d ){
    цепочку.
    В ходе вычислений старое значение q теряется.
 */
-void lintdiv( LINTEGER *x, LADDRESS *xe, LINTEGER y,
-              LINTEGER *q, LADDRESS *qe ){
-        LADDRESS xc, yc, xtmp, xbar, xt, xp;
-        byte xq[ LDIGIT_SIZE ], xr[ LDIGIT_SIZE ], d[ LDIGIT_SIZE ];
+void lintdiv( LINTEGER *x, lcell* *xe, LINTEGER y,
+              LINTEGER *q, lcell* *qe ){
+	lcell *xc, *yc, *xtmp, *xbar, *xt, *xp;
+        LINT_DIGIT xq[ LDIGIT_SIZE ], xr[ LDIGIT_SIZE ], d[ LDIGIT_SIZE ];
         int comp;
 
         *q = *qe = LNULL;
@@ -361,7 +361,7 @@ void lintdiv( LINTEGER *x, LADDRESS *xe, LINTEGER y,
                         lint12add( (*x)->link->data, y->data, xr );
                 }
                 if( !LintCf ){
-                        byte w[ 2 ][ LDIGIT_SIZE ];
+                        LINT_DIGIT w[ 2 ][ LDIGIT_SIZE ];
                         int c;
 
                         lint12mul( y->link->data, xq, (LDIGIT)w );
@@ -394,7 +394,7 @@ void lintdiv( LINTEGER *x, LADDRESS *xe, LINTEGER y,
                 xp = *x;
                 xc = xp->link;
                 do{
-                        byte w[ 2 ][ LDIGIT_SIZE ];
+                        LINT_DIGIT w[ 2 ][ LDIGIT_SIZE ];
 
                         lint12mul( yc->data, xq, (LDIGIT)w );
                         lint12sub( xc->data, w[ 0 ], xc->data );
@@ -470,7 +470,7 @@ NEXT:           xtmp = *x;
 
         /* денормализация делителя и делимого */
         if( lint12cmp( d, Lint12One ) ){
-                byte t[ LDIGIT_SIZE ];
+                LINT_DIGIT t[ LDIGIT_SIZE ];
 
                 lint12zero( t );
                 yc = y;
@@ -540,8 +540,8 @@ int lintcmp( LINTEGERC x, LINTEGERC y ){
    ячейку числа. В противном случае значение xe не изменяется. 
    x и y могут ссылаться на одну и ту же цепочку. 
 */
-int lintsub( LINTEGER *x, LADDRESS *xe, LINTEGERC y ){
-        LADDRESS xc, xt;
+int lintsub( LINTEGER *x, lcell* *xe, LINTEGERC y ){
+        lcell *xc, *xt;
         int sign;
 
         LintCf = 0;
@@ -595,7 +595,7 @@ int lintsub( LINTEGER *x, LADDRESS *xe, LINTEGERC y ){
                 sign = 0;
 
         if( xt->link == LNULL && !lint12cmp( xt->data, Lint12Zero ) ){
-                LADDRESS xs;
+                lcell* xs;
 
                 /* удаление ведущих нулевых разрядов */
                 xs = LNULL;
@@ -624,7 +624,7 @@ int lintsub( LINTEGER *x, LADDRESS *xe, LINTEGERC y ){
 /* Преобразование длинного беззнакового целого. Полученное число
    всегда состоит из одной ячейки (ее адрес присваевается x и
    возвращается в качестве результата). */
-LADDRESS lintlong( LINTEGER *x, unsigned long v ){
+lcell* lintlong( LINTEGER *x, unsigned long v ){
         if( v != 0 ){
                 *x = new_cell();
                 lint12long( (*x)->data, v );
@@ -635,8 +635,8 @@ LADDRESS lintlong( LINTEGER *x, unsigned long v ){
         return *x;
 }
 
-LADDRESS lintdouble(LINTEGER *x, double v){
-	LADDRESS xe;
+lcell* lintdouble(LINTEGER *x, double v){
+	lcell* xe;
 	double r;
 	int i;
 
@@ -661,4 +661,31 @@ LADDRESS lintdouble(LINTEGER *x, double v){
 	while(i > 0 && i < LDIGIT_SIZE)
 		xe->data[i++] = 0;
 	return xe;
+}
+
+lcell* lintrand(LINTEGER *x, int length)
+{
+  lcell *xe;
+
+  if(length < 0)
+    length = rand()%(-length + 1);
+
+  if(length > 0)
+    {
+      char *b;
+
+      b = malloc(length + 1);
+      if(b)
+	{
+	  b[length--] = '\0';
+	  while(length >= 0)
+	    b[length--] = '0' + rand()%10;
+	  xe = lint(x, b);
+	  free(b);
+	}
+     }
+  else
+    *x = xe = LNULL;
+  
+  return xe;
 }

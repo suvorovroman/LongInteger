@@ -7,9 +7,11 @@
 
 using namespace std;
 
-#define MAX_LENGTH		6765	//!< Максимальная длина тестируемых чисел.
+#define MAX_LENGTH	6765	//!< Максимальная длина тестируемых чисел.
 #define MAX_ATTEMPTS	10000	//!< Количество попыток теста.
 #define MAX_SEGMENTS	100
+
+extern "C" size_t lblock_size(void);
 
 /** 	\brief Тест основных арифметических операций.
 
@@ -41,8 +43,9 @@ static void unit_01(linteger::rng& g)
 			cout << "q*b+r:" << q*b + r << endl;
 			exit(2018);
 		}
-		cout << i << '\t';
 	}
+
+	cout << "Memory leak: " << lleak() << endl;
 }
 
 static void unit_02(linteger::rng& g)
@@ -64,7 +67,6 @@ static void unit_02(linteger::rng& g)
 				n[i]++;
 				break;
 			}
-		cout << j << '\t';
 	}
 
 	cout << endl;
@@ -82,6 +84,8 @@ static void unit_02(linteger::rng& g)
 		cout << "Statistic calculation failure:" << MAX_ATTEMPTS << "!=" << c << endl;
 		exit(2018);
 	}
+
+	cout << "Memory leak: " << lleak() << endl;
 }
 
 static void unit_03()
@@ -103,7 +107,6 @@ static void unit_03()
 				n[i]++;
 				break;
 			}
-		cout << j << '\t';
 	}
 	cout << endl;
 
@@ -124,18 +127,23 @@ static void unit_03()
 
 int main(int _argc, const char* _argv[])
 {
+  cout << "LSTOR_POOL_SIZE:\t" << LSTOR_POOL_SIZE << endl;
+  cout << "LSTOR_CELL_SIZE:\t" << LSTOR_CELL_SIZE << endl;
+  cout << "sizeof(lcell):\t" << sizeof(lcell) << endl;
+  cout << "lblock_size:\t" << lblock_size() << endl;
+
 	int seed = (int)time(0);
 
 	linteger::rng g(MAX_LENGTH);
-	cout << "Randomizing seed " << seed << endl;
-
+	cout << "Randomizing seed\t" << seed << endl;
 	srand(seed);
 	
-//	unit_01(g);
+      	unit_01(g);
 	unit_02(g);
-//	unit_03();
+	unit_03();
 
 	linteger::finalize();
+
 	cout << "ok" << endl;
 	cin.get();
 	return 0;

@@ -21,7 +21,7 @@ static int lendt( LDIGITC x, int l ){
    занимает более 12 байт) не производится (см. вызовы assert). */
 void lint12div( LDIGITC xl, LDIGITC xh, LDIGIT y, LDIGIT q, LDIGIT r ){
         int m, n, i, j, k;
-        byte x[ 2*LDIGIT_SIZE + 1 ], d, t;
+        LINT_DIGIT x[ 2*LDIGIT_SIZE + 1 ], d, t;
 
         m = lendt( y, 1 ) - 1;
         lint12copy( x, xl );
@@ -42,7 +42,7 @@ void lint12div( LDIGITC xl, LDIGITC xh, LDIGIT y, LDIGIT q, LDIGIT r ){
 
         /* случай одноразрядного делителя */
         if( m == 0 ){
-                byte xq;
+                LINT_DIGIT xq;
 
                 for( i = n - 1; i >= 0; i-- ){
                         r[ 0 ] = lint1div( x[ i ], r[ 0 ], y[ 0 ], &xq);
@@ -63,7 +63,7 @@ void lint12div( LDIGITC xl, LDIGITC xh, LDIGIT y, LDIGIT q, LDIGIT r ){
         else
                 lint1div( 0, 1, d, &d );
         if( d != 1 ){
-                byte w[ 2 ];
+                LINT_DIGIT w[ 2 ];
 
                 t = 0;
                 for( i = 0; i < n; i++ ){
@@ -89,7 +89,7 @@ void lint12div( LDIGITC xl, LDIGITC xh, LDIGIT y, LDIGIT q, LDIGIT r ){
 
         /* цикл деления */
         for( i = n; i > m; i-- ){
-                byte xq, xr;
+                LINT_DIGIT xq, xr;
 
                 /* оценка цифры xq частного */
                 if( x[ i ] < y[ m ] ){
@@ -105,7 +105,7 @@ void lint12div( LDIGITC xl, LDIGITC xh, LDIGIT y, LDIGIT q, LDIGIT r ){
                         xr = lint1add( x[ i - 1 ], y[ m ] );
                 }
                 if( !LintCf ){
-                        byte w[ 2 ];
+                        LINT_DIGIT w[ 2 ];
 
                         /* xq == q || xq == q + 1 || xq == q + 2 */
                         lint1mul( y[ m - 1 ], xq, w );
@@ -132,7 +132,7 @@ void lint12div( LDIGITC xl, LDIGITC xh, LDIGIT y, LDIGIT q, LDIGIT r ){
                 /* вычисление промежуточного остатка */
                 t = 0;
                 for( j = 0, k = i - m - 1; j <= m; j++ ){
-                        byte w[ 2 ];
+                        LINT_DIGIT w[ 2 ];
 
                         lint1mul( y[ j ], xq, w );
                         /* LintCf == 0 */
@@ -186,13 +186,13 @@ void lint12mul( LDIGITC x, LDIGITC y, LDIGIT z ){
         m = lendt( y, 1 ) - 1;
         for( i = 0; i < LDIGIT_SIZE; i++ ){
                 int j;
-                byte t;
+                LINT_DIGIT t;
 
                 if( x[ i ] == 0 )
                         continue;
                 t = 0;
                 for( j = 0; j <= m; j++ ){
-                        byte w[ 2 ];
+                        LINT_DIGIT w[ 2 ];
 
                         lint1mul( x[ i ], y[ j ], w );
                         /* LintCf == 0 */
@@ -287,7 +287,7 @@ void lint12long( LDIGIT x, unsigned long v ){
    десятичных цифр. d[ i ] содержит i-ю десятичную цифру числа
    x (начиная с младших цифр).
 */
-void lint12dt( LDIGITC x, byte d[ LINT12_NDT ] ){
+void lint12dt( LDIGITC x, LINT_DIGIT d[ LINT12_NDT ] ){
       int i, j;
 
       for( i = j = 0; i < LDIGIT_SIZE; i++, j += LINT1_NDT )
@@ -297,19 +297,6 @@ void lint12dt( LDIGITC x, byte d[ LINT12_NDT ] ){
 /*                      12-БАЙТОВЫЕ КОНСТАНТЫ                         */
 /*--------------------------------------------------------------------*/
 
-const byte Lint12Zero [ LDIGIT_SIZE ]
-                               = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-const byte Lint12One  [ LDIGIT_SIZE ]
-                               = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-const byte Lint12Beta1[ LDIGIT_SIZE ] = { LINT_BETA1,
-                                          LINT_BETA1,
-                                          LINT_BETA1,
-                                          LINT_BETA1,
-                                          LINT_BETA1,
-                                          LINT_BETA1,
-                                          LINT_BETA1,
-                                          LINT_BETA1,
-                                          LINT_BETA1,
-                                          LINT_BETA1,
-                                          LINT_BETA1,
-                                          LINT_BETA1 };
+const LINT_DIGIT Lint12Zero [ LDIGIT_SIZE ] = LSTOR_CELL_VALUE(0, 0);
+const LINT_DIGIT Lint12One  [ LDIGIT_SIZE ] = LSTOR_CELL_VALUE(1, 0); 
+const LINT_DIGIT Lint12Beta1[ LDIGIT_SIZE ] = LSTOR_CELL_VALUE(LINT_BETA1, LINT_BETA1); 

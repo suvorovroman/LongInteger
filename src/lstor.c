@@ -7,24 +7,24 @@
 #include "lstor.h"
 
 /* Адрес начала списка свободных ячеек. */
-static LADDRESS Avail = LNULL;
+static lcell* Avail = LNULL;
 
-LADDRESS        get_lblock( void );
+lcell*        get_lblock( void );
 void            free_lbchain( void );
 
 /* Если возможно выделяет ячейку из списка Avail.
    Если Avail пуст,то пытается выделить ячейку из текущего блока памяти.
    Если текущий блок исчерпан, то выделяется новый.     */
-LADDRESS new_cell( void ){
-        LADDRESS ret;
+lcell* new_cell( void ){
+        lcell *ret;
 
         if( Avail == LNULL ){
-                static LADDRESS b;
+                static lcell *b;
                 static unsigned int r = 0;
 
                 if( r == 0 ){
                         b = get_lblock();
-                        r = LBLOCK_SIZE;
+                        r = LSTOR_POOL_SIZE;
                 }
                 ret = b + (--r);
         }
@@ -38,18 +38,18 @@ LADDRESS new_cell( void ){
 /* Возвращение цепочки в список Avail.
    Предполагается, что b и e являются началом и концом
    одной и той же цепочки (b != LNULL && e != LNULL). */
-void del_chain( LADDRESS b, LADDRESS e ){
+void del_chain( lcell* b, lcell* e ){
         e->link = Avail;
         Avail = b;
 }
 
 /* Обращение цепочки (x может быть LNULL). */
-void invert_chain( LADDRESS * x ){
-        LADDRESS c;
+void invert_chain( lcell **x ){
+        lcell *c;
 
         c = LNULL;
         while( *x != LNULL ){
-                LADDRESS f;
+                lcell *f;
 
                 f = *x;
                 *x = f->link;
@@ -62,8 +62,8 @@ void invert_chain( LADDRESS * x ){
 /* Копирование цепочки (y может быть LNULL).
    В x помешается адрес начала цепочки, а возвращается адрес
    конца. */
-LADDRESS copy_chain( LADDRESS * x, LADDRESSC y ){
-        LADDRESS xe;
+lcell* copy_chain( lcell **x, const lcell* y ){
+        lcell* xe;
 
         *x = xe = LNULL;
         while( y != LNULL ){
@@ -83,16 +83,16 @@ LADDRESS copy_chain( LADDRESS * x, LADDRESSC y ){
 
 /* Копирование поля данных ячейки (чтобы не использовать
    функции _fmemcpy, _fmemset и т.д.). */
-void copy_cell_data( LDATA x, LDATAC y ){
+void copy_cell_data( lcell_byte *x, const lcell_byte *y ){
         struct wrap{
-                byte data[ LCELL_DATA_SIZE ];
+                lcell_byte data[ LSTOR_CELL_SIZE ];
         };
         *((struct wrap  *)x) = *((struct wrap  *)y);
 }
 
 /* Вычисление длины цепочки x. В e заносится адрес последней
    ячейки. */
-unsigned int len_chain( LADDRESS x, LADDRESS *e ){
+unsigned int len_chain( lcell *x, lcell **e ){
 	unsigned int count;
 	
 	count = 0;
